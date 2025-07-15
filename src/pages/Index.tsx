@@ -1,12 +1,112 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Eye, EyeOff, Package, ShoppingCart, User } from "lucide-react";
+import { Dashboard } from "@/components/Dashboard";
 
 const Index = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSignIn = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simple validation for demo purposes
+    if (formData.email && formData.password) {
+      setIsSignedIn(true);
+    }
+  };
+
+  if (isSignedIn) {
+    return <Dashboard />;
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen flex items-center justify-center p-6 gradient-bg">
+      <Card className="w-full max-w-md shadow-2xl border-0">
+        <CardHeader className="text-center space-y-4">
+          <div className="flex justify-center mb-4">
+            <div className="p-3 rounded-full bg-primary/10">
+              <Package className="h-8 w-8 text-primary" />
+            </div>
+          </div>
+          <CardTitle className="text-3xl font-bold gradient-text">
+            Supplier Portal
+          </CardTitle>
+          <CardDescription className="text-lg">
+            Sign in to manage your cracker business
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSignIn} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium">
+                Email Address
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="supplier@example.com"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className="h-12"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm font-medium">
+                Password
+              </Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                  className="h-12 pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+            <Button
+              type="submit"
+              className="w-full h-12 text-lg font-medium gradient-bg border-0 hover:opacity-90 transition-opacity"
+            >
+              Sign In
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
