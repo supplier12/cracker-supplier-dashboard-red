@@ -10,7 +10,7 @@ import { Menu, LogOut } from "lucide-react";
 
 export const Dashboard = () => {
   const [activeSection, setActiveSection] = useState<"profile" | "products" | "orders">("profile");
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const handleSignOut = () => {
     window.location.reload();
@@ -35,8 +35,8 @@ export const Dashboard = () => {
         <AppSidebar 
           activeSection={activeSection}
           setActiveSection={setActiveSection}
-          isCollapsed={isSidebarCollapsed}
-          setIsCollapsed={setIsSidebarCollapsed}
+          isOpen={isSidebarOpen}
+          setIsOpen={setIsSidebarOpen}
         />
         
         <main className="flex-1 flex flex-col">
@@ -45,8 +45,8 @@ export const Dashboard = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                className="md:hidden"
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="hover:bg-gray-100"
               >
                 <Menu className="h-5 w-5" />
               </Button>
