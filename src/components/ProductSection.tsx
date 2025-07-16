@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Edit2, Trash2, Plus, Search, Package } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Edit2, Search, Package, RotateCcw } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Product {
   id: string;
@@ -27,10 +27,9 @@ export const ProductSection = () => {
   ]);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  const [newProduct, setNewProduct] = useState({
+  const [updateForm, setUpdateForm] = useState({
     category: "",
     name: "",
     price: ""
@@ -51,32 +50,31 @@ export const ProductSection = () => {
     product.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleAddProduct = () => {
-    if (newProduct.category && newProduct.name && newProduct.price) {
-      const product: Product = {
-        id: Date.now().toString(),
-        category: newProduct.category,
-        name: newProduct.name,
-        price: parseFloat(newProduct.price)
-      };
-      setProducts([...products, product]);
-      setNewProduct({ category: "", name: "", price: "" });
-      setIsAddDialogOpen(false);
+  const handleUpdatePrice = () => {
+    if (updateForm.category && updateForm.name && updateForm.price) {
+      const existingProduct = products.find(p => 
+        p.category === updateForm.category && p.name === updateForm.name
+      );
+      
+      if (existingProduct) {
+        setProducts(products.map(product => 
+          product.id === existingProduct.id 
+            ? { ...product, price: parseFloat(updateForm.price) } 
+            : product
+        ));
+        setUpdateForm({ category: "", name: "", price: "" });
+      }
     }
   };
 
-  const handleUpdateProduct = (id: string, newPrice: number) => {
+  const handleEditProduct = (id: string, newPrice: number) => {
     setProducts(products.map(product => 
       product.id === id ? { ...product, price: newPrice } : product
     ));
     setEditingProduct(null);
   };
 
-  const handleDeleteProduct = (id: string) => {
-    setProducts(products.filter(product => product.id !== id));
-  };
-
-  const availableProducts = newProduct.category ? productsByCategory[newProduct.category as keyof typeof productsByCategory] || [] : [];
+  const availableProducts = updateForm.category ? productsByCategory[updateForm.category as keyof typeof productsByCategory] || [] : [];
 
   return (
     <div className="space-y-6">
@@ -123,7 +121,7 @@ export const ProductSection = () => {
                   <TableHead className="font-semibold">Category</TableHead>
                   <TableHead className="font-semibold">Product Name</TableHead>
                   <TableHead className="font-semibold">Price (₹)</TableHead>
-                  <TableHead className="font-semibold">Actions</TableHead>
+                  <TableHead className="font-semibold">Tools</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -138,24 +136,14 @@ export const ProductSection = () => {
                     <TableCell className="font-medium">{product.name}</TableCell>
                     <TableCell className="font-semibold text-green-600">₹{product.price}</TableCell>
                     <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setEditingProduct(product)}
-                          className="h-8 w-8 p-0 hover:bg-primary/10"
-                        >
-                          <Edit2 className="h-4 w-4 text-primary" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteProduct(product.id)}
-                          className="h-8 w-8 p-0 hover:bg-red-100"
-                        >
-                          <Trash2 className="h-4 w-4 text-red-600" />
-                        </Button>
-                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditingProduct(product)}
+                        className="h-8 w-8 p-0 hover:bg-primary/10"
+                      >
+                        <Edit2 className="h-4 w-4 text-primary" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -168,18 +156,18 @@ export const ProductSection = () => {
       <Card className="shadow-lg">
         <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 border-b">
           <CardTitle className="text-xl flex items-center gap-2">
-            <Plus className="h-5 w-5 text-primary" />
-            Add New Product
+            <RotateCcw className="h-5 w-5 text-primary" />
+            Update Product Price
           </CardTitle>
           <CardDescription>
-            Add products to your inventory with updated pricing
+            Update pricing for existing products in your inventory
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
-              <Select value={newProduct.category} onValueChange={(value) => setNewProduct({...newProduct, category: value, name: ""})}>
+              <Select value={updateForm.category} onValueChange={(value) => setUpdateForm({...updateForm, category: value, name: ""})}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
@@ -193,7 +181,7 @@ export const ProductSection = () => {
 
             <div className="space-y-2">
               <Label htmlFor="name">Product Name</Label>
-              <Select value={newProduct.name} onValueChange={(value) => setNewProduct({...newProduct, name: value})} disabled={!newProduct.category}>
+              <Select value={updateForm.name} onValueChange={(value) => setUpdateForm({...updateForm, name: value})} disabled={!updateForm.category}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select product" />
                 </SelectTrigger>
@@ -210,17 +198,17 @@ export const ProductSection = () => {
               <Input
                 id="price"
                 type="number"
-                placeholder="Enter price"
-                value={newProduct.price}
-                onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                placeholder="Enter new price"
+                value={updateForm.price}
+                onChange={(e) => setUpdateForm({...updateForm, price: e.target.value})}
               />
             </div>
 
             <div className="space-y-2">
               <Label>&nbsp;</Label>
-              <Button onClick={handleAddProduct} className="w-full gradient-bg border-0 hover:opacity-90">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Product
+              <Button onClick={handleUpdatePrice} className="w-full gradient-bg border-0 hover:opacity-90">
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Update
               </Button>
             </div>
           </div>
@@ -258,7 +246,7 @@ export const ProductSection = () => {
                 <Button variant="outline" onClick={() => setEditingProduct(null)}>
                   Cancel
                 </Button>
-                <Button onClick={() => handleUpdateProduct(editingProduct.id, editingProduct.price)} className="gradient-bg border-0">
+                <Button onClick={() => handleEditProduct(editingProduct.id, editingProduct.price)} className="gradient-bg border-0">
                   Update Price
                 </Button>
               </div>
