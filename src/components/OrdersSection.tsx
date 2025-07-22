@@ -13,6 +13,9 @@ interface Order {
   orderId: string;
   orderDate: string;
   status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
+  buyerName: string;
+  buyerCity: string;
+  deliveryLocation: string;
   items: Array<{
     productName: string;
     quantity: number;
@@ -28,6 +31,9 @@ export const OrdersSection = () => {
       orderId: "ORD-2024-001",
       orderDate: "2024-01-15",
       status: "confirmed",
+      buyerName: "Rahul Sharma",
+      buyerCity: "Mumbai",
+      deliveryLocation: "Shop No. 15, Linking Road, Bandra West, Mumbai - 400050",
       items: [
         { productName: "Red Flower Pot", quantity: 10, price: 150 },
         { productName: "7cm Sparkler", quantity: 5, price: 80 }
@@ -39,6 +45,9 @@ export const OrdersSection = () => {
       orderId: "ORD-2024-002",
       orderDate: "2024-01-16",
       status: "shipped",
+      buyerName: "Priya Patel",
+      buyerCity: "Delhi",
+      deliveryLocation: "Block A-25, Lajpat Nagar, New Delhi - 110024",
       items: [
         { productName: "Rocket Small", quantity: 3, price: 200 },
         { productName: "Green Flower Pot", quantity: 8, price: 160 }
@@ -50,6 +59,9 @@ export const OrdersSection = () => {
       orderId: "ORD-2024-003",
       orderDate: "2024-01-17",
       status: "pending",
+      buyerName: "Amit Kumar",
+      buyerCity: "Bangalore",
+      deliveryLocation: "HSR Layout, Sector 2, Bangalore - 560102",
       items: [
         { productName: "12cm Sparkler", quantity: 15, price: 120 }
       ],
@@ -60,6 +72,9 @@ export const OrdersSection = () => {
       orderId: "ORD-2024-004",
       orderDate: "2024-01-18",
       status: "delivered",
+      buyerName: "Sneha Singh",
+      buyerCity: "Pune",
+      deliveryLocation: "Koregaon Park, Pune - 411001",
       items: [
         { productName: "Red Flower Pot", quantity: 6, price: 150 },
         { productName: "Rocket Small", quantity: 4, price: 200 }
@@ -71,6 +86,9 @@ export const OrdersSection = () => {
       orderId: "ORD-2024-005",
       orderDate: "2024-01-19",
       status: "cancelled",
+      buyerName: "Vikash Gupta",
+      buyerCity: "Chennai",
+      deliveryLocation: "T. Nagar, Chennai - 600017",
       items: [
         { productName: "Green Flower Pot", quantity: 12, price: 160 }
       ],
@@ -83,7 +101,9 @@ export const OrdersSection = () => {
 
   const filteredOrders = orders.filter(order =>
     order.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.status.toLowerCase().includes(searchTerm.toLowerCase())
+    order.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.buyerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.buyerCity.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getStatusColor = (status: Order['status']) => {
@@ -145,6 +165,8 @@ export const OrdersSection = () => {
                   <TableHead className="font-semibold">S.No</TableHead>
                   <TableHead className="font-semibold">Order ID</TableHead>
                   <TableHead className="font-semibold">Order Date</TableHead>
+                  <TableHead className="font-semibold">Buyer Name</TableHead>
+                  <TableHead className="font-semibold">Buyer City</TableHead>
                   <TableHead className="font-semibold">Order Status</TableHead>
                   <TableHead className="font-semibold">View Details</TableHead>
                 </TableRow>
@@ -158,6 +180,8 @@ export const OrdersSection = () => {
                       <Calendar className="h-4 w-4 text-gray-400" />
                       {new Date(order.orderDate).toLocaleDateString()}
                     </TableCell>
+                    <TableCell className="font-medium">{order.buyerName}</TableCell>
+                    <TableCell className="text-muted-foreground">{order.buyerCity}</TableCell>
                     <TableCell>
                       <Badge className={getStatusColor(order.status)}>
                         {getStatusText(order.status)}
@@ -184,7 +208,7 @@ export const OrdersSection = () => {
                           </DialogHeader>
                           {selectedOrder && (
                             <div className="space-y-6">
-                              <div className="grid grid-cols-1 gap-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                   <h4 className="font-semibold text-gray-700">Order Information</h4>
                                   <div className="space-y-1 text-sm">
@@ -195,7 +219,16 @@ export const OrdersSection = () => {
                                         {getStatusText(selectedOrder.status)}
                                       </Badge>
                                     </p>
+                                    <p><span className="font-medium">Total Crackers:</span> {selectedOrder.items.reduce((sum, item) => sum + item.quantity, 0)}</p>
                                     <p><span className="font-medium">Total Amount:</span> ₹{selectedOrder.totalAmount}</p>
+                                  </div>
+                                </div>
+                                <div className="space-y-2">
+                                  <h4 className="font-semibold text-gray-700">Buyer Information</h4>
+                                  <div className="space-y-1 text-sm">
+                                    <p><span className="font-medium">Buyer Name:</span> {selectedOrder.buyerName}</p>
+                                    <p><span className="font-medium">City:</span> {selectedOrder.buyerCity}</p>
+                                    <p><span className="font-medium">Delivery Location:</span> {selectedOrder.deliveryLocation}</p>
                                   </div>
                                 </div>
                               </div>
