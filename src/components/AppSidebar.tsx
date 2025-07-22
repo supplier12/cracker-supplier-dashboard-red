@@ -44,7 +44,7 @@ export const AppSidebar = ({
 
   return (
     <div className="relative">
-      <Sidebar className="bg-white border-r shadow-lg w-48">
+      <Sidebar className="bg-white border-r shadow-lg w-64">
         <SidebarHeader className="p-3 border-b relative">
           <Button
             variant="ghost"
