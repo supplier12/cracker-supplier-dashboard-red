@@ -74,7 +74,7 @@ export const ProductSection = () => {
     setEditingProduct(null);
   };
 
-  const availableProducts = updateForm.category ? productsByCategory[updateForm.category as keyof typeof productsByCategory] || [] : [];
+  const availableProducts = updateForm.category ? products.filter(p => p.category === updateForm.category).map(p => p.name) : [];
 
   return (
     <div className="space-y-6">

@@ -44,29 +44,29 @@ export const AppSidebar = ({
 
   return (
     <div className="relative">
-      <Sidebar className="bg-white border-r shadow-lg w-72">
-        <SidebarHeader className="p-6 border-b relative">
+      <Sidebar className="bg-white border-r shadow-lg w-48">
+        <SidebarHeader className="p-3 border-b relative">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setIsOpen(false)}
-            className="absolute top-4 right-4 h-8 w-8 p-0 hover:bg-gray-100"
+            className="absolute top-2 right-2 h-6 w-6 p-0 hover:bg-gray-100"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3 w-3" />
           </Button>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg gradient-bg">
-              <Store className="h-6 w-6 text-white" />
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg gradient-bg">
+              <Store className="h-4 w-4 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold gradient-text">CrackerSupply</h2>
-              <p className="text-sm text-muted-foreground">Supplier Panel</p>
+              <h2 className="text-sm font-bold gradient-text">CrackerSupply</h2>
+              <p className="text-xs text-muted-foreground">Supplier Panel</p>
             </div>
           </div>
         </SidebarHeader>
         
-        <SidebarContent className="p-4">
-          <div className="space-y-2">
+        <SidebarContent className="p-2">
+          <div className="space-y-1">
             {menuItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeSection === item.id;
@@ -76,18 +76,18 @@ export const AppSidebar = ({
                   key={item.id}
                   variant={isActive ? "default" : "ghost"}
                   className={cn(
-                    "w-full justify-start h-12 transition-all duration-200",
+                    "w-full justify-start h-10 transition-all duration-200 text-xs",
                     isActive 
                       ? "bg-primary text-white shadow-md" 
                       : "hover:bg-accent hover:text-accent-foreground",
-                    "px-4"
+                    "px-2"
                   )}
                   onClick={() => setActiveSection(item.id)}
                 >
-                  <Icon className="h-5 w-5 mr-3" />
-                  <div className="flex flex-col items-start">
-                    <span className="font-medium">{item.label}</span>
-                    <span className="text-xs opacity-75">{item.description}</span>
+                  <Icon className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <div className="flex flex-col items-start text-left">
+                    <span className="font-medium text-xs leading-tight">{item.label}</span>
+                    <span className="text-xs opacity-75 leading-tight">{item.description}</span>
                   </div>
                 </Button>
               );
