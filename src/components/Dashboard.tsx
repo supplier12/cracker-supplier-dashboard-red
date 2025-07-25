@@ -34,15 +34,7 @@ export const Dashboard = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50">
-        {/* Mobile Overlay */}
-        {isMobile && isSidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black/50 z-40"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
-        
+      <div className="min-h-screen flex w-full bg-gray-50 relative">
         <AppSidebar 
           activeSection={activeSection}
           setActiveSection={setActiveSection}
@@ -50,6 +42,14 @@ export const Dashboard = () => {
           setIsOpen={setIsSidebarOpen}
           isMobile={isMobile}
         />
+        
+        {/* Mobile Backdrop */}
+        {isMobile && isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 animate-fade-in"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
         
         <main className="flex-1 flex flex-col min-w-0">
           <header className="bg-white shadow-sm border-b p-3 md:p-4 flex items-center justify-between">
