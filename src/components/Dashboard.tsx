@@ -34,27 +34,22 @@ export const Dashboard = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50 relative">
+      <div className="min-h-screen flex w-full bg-gray-50">
         {/* Mobile Overlay */}
         {isMobile && isSidebarOpen && (
           <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            className="fixed inset-0 bg-black/50 z-40"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
         
-        <div className={cn(
-          "transition-all duration-300 ease-in-out",
-          !isMobile && !isSidebarOpen && "w-0 overflow-hidden"
-        )}>
-          <AppSidebar 
-            activeSection={activeSection}
-            setActiveSection={setActiveSection}
-            isOpen={isSidebarOpen}
-            setIsOpen={setIsSidebarOpen}
-            isMobile={isMobile}
-          />
-        </div>
+        <AppSidebar 
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+          isOpen={isSidebarOpen}
+          setIsOpen={setIsSidebarOpen}
+          isMobile={isMobile}
+        />
         
         <main className="flex-1 flex flex-col min-w-0">
           <header className="bg-white shadow-sm border-b p-3 md:p-4 flex items-center justify-between">
@@ -82,8 +77,10 @@ export const Dashboard = () => {
             </Button>
           </header>
           
-          <div className="flex-1 p-3 md:p-6">
-            {renderContent()}
+          <div className="flex-1 p-3 md:p-6 overflow-x-hidden">
+            <div className="w-full max-w-full">
+              {renderContent()}
+            </div>
           </div>
         </main>
       </div>

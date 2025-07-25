@@ -43,12 +43,17 @@ export const AppSidebar = ({
 
   return (
     <div className={cn(
-      "relative transition-transform duration-300 ease-in-out z-50",
-      isMobile ? "fixed inset-y-0 left-0" : "relative",
-      isMobile && !isOpen && "-translate-x-full"
+      "transition-all duration-300 ease-in-out",
+      isMobile ? cn(
+        "fixed inset-y-0 left-0 z-50",
+        !isOpen && "-translate-x-full"
+      ) : cn(
+        "relative",
+        !isOpen && "w-0 overflow-hidden"
+      )
     )}>
       <Sidebar className={cn(
-        "bg-white border-r shadow-lg",
+        "bg-white border-r shadow-lg h-full",
         isMobile ? "w-72" : "w-64"
       )}>
         <SidebarHeader className="p-3 border-b relative">
