@@ -7,10 +7,12 @@ import { ProductSection } from "@/components/ProductSection";
 import { OrdersSection } from "@/components/OrdersSection";
 import { Button } from "@/components/ui/button";
 import { Menu, LogOut } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const Dashboard = () => {
   const [activeSection, setActiveSection] = useState<"profile" | "products" | "orders">("profile");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const isMobile = useIsMobile();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
 
   const handleSignOut = () => {
     window.location.reload();
@@ -31,40 +33,50 @@ export const Dashboard = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50">
+      <div className="min-h-screen flex w-full bg-gray-50 relative">
+        {/* Mobile Overlay */}
+        {isMobile && isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+        
         <AppSidebar 
           activeSection={activeSection}
           setActiveSection={setActiveSection}
           isOpen={isSidebarOpen}
           setIsOpen={setIsSidebarOpen}
+          isMobile={isMobile}
         />
         
-        <main className="flex-1 flex flex-col">
-          <header className="bg-white shadow-sm border-b p-4 flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <main className="flex-1 flex flex-col min-w-0">
+          <header className="bg-white shadow-sm border-b p-3 md:p-4 flex items-center justify-between">
+            <div className="flex items-center gap-2 md:gap-4 min-w-0">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="hover:bg-gray-100"
+                className="hover:bg-gray-100 flex-shrink-0"
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              <h1 className="text-2xl font-bold gradient-text">
+              <h1 className="text-lg md:text-2xl font-bold gradient-text truncate">
                 Supplier Dashboard
               </h1>
             </div>
             <Button
               variant="outline"
               onClick={handleSignOut}
-              className="flex items-center gap-2"
+              className="flex items-center gap-1 md:gap-2 text-xs md:text-sm flex-shrink-0"
+              size={isMobile ? "sm" : "default"}
             >
-              <LogOut className="h-4 w-4" />
-              Sign Out
+              <LogOut className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Sign Out</span>
             </Button>
           </header>
           
-          <div className="flex-1 p-6">
+          <div className="flex-1 p-3 md:p-6">
             {renderContent()}
           </div>
         </main>

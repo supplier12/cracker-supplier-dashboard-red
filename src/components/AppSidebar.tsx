@@ -9,13 +9,15 @@ interface AppSidebarProps {
   setActiveSection: (section: "profile" | "products" | "orders") => void;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  isMobile: boolean;
 }
 
 export const AppSidebar = ({ 
   activeSection, 
   setActiveSection, 
   isOpen,
-  setIsOpen 
+  setIsOpen,
+  isMobile
 }: AppSidebarProps) => {
   const menuItems = [
     {
@@ -43,8 +45,15 @@ export const AppSidebar = ({
   }
 
   return (
-    <div className="relative">
-      <Sidebar className="bg-white border-r shadow-lg w-64">
+    <div className={cn(
+      "relative transition-transform duration-300 ease-in-out z-50",
+      isMobile ? "fixed inset-y-0 left-0" : "relative",
+      isMobile && !isOpen && "-translate-x-full"
+    )}>
+      <Sidebar className={cn(
+        "bg-white border-r shadow-lg",
+        isMobile ? "w-72" : "w-64"
+      )}>
         <SidebarHeader className="p-3 border-b relative">
           <Button
             variant="ghost"
@@ -82,7 +91,12 @@ export const AppSidebar = ({
                       : "hover:bg-accent hover:text-accent-foreground",
                     "px-2"
                   )}
-                  onClick={() => setActiveSection(item.id)}
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    if (isMobile) {
+                      setIsOpen(false);
+                    }
+                  }}
                 >
                   <Icon className="h-4 w-4 mr-2 flex-shrink-0" />
                   <div className="flex flex-col items-start text-left">
