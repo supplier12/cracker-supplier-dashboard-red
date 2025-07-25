@@ -40,9 +40,6 @@ export const AppSidebar = ({
     }
   ];
 
-  if (!isOpen) {
-    return null;
-  }
 
   return (
     <div className={cn(

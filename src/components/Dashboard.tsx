@@ -8,6 +8,7 @@ import { OrdersSection } from "@/components/OrdersSection";
 import { Button } from "@/components/ui/button";
 import { Menu, LogOut } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export const Dashboard = () => {
   const [activeSection, setActiveSection] = useState<"profile" | "products" | "orders">("profile");
@@ -42,13 +43,18 @@ export const Dashboard = () => {
           />
         )}
         
-        <AppSidebar 
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-          isOpen={isSidebarOpen}
-          setIsOpen={setIsSidebarOpen}
-          isMobile={isMobile}
-        />
+        <div className={cn(
+          "transition-all duration-300 ease-in-out",
+          !isMobile && !isSidebarOpen && "w-0 overflow-hidden"
+        )}>
+          <AppSidebar 
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
+            isOpen={isSidebarOpen}
+            setIsOpen={setIsSidebarOpen}
+            isMobile={isMobile}
+          />
+        </div>
         
         <main className="flex-1 flex flex-col min-w-0">
           <header className="bg-white shadow-sm border-b p-3 md:p-4 flex items-center justify-between">
