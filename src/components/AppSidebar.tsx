@@ -74,8 +74,8 @@ export const AppSidebar = ({
               </div>
             </SidebarHeader>
             
-            <SidebarContent className="p-3 bg-white">
-              <div className="space-y-2">
+            <SidebarContent className="p-4 bg-white overflow-y-auto">
+              <div className="space-y-3">
                 {menuItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = activeSection === item.id;
@@ -85,11 +85,11 @@ export const AppSidebar = ({
                       key={item.id}
                       variant={isActive ? "default" : "ghost"}
                       className={cn(
-                        "w-full justify-start h-12 transition-all duration-200 text-sm rounded-xl",
+                        "w-full justify-start h-14 transition-all duration-200 text-sm rounded-xl",
                         isActive 
                           ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg hover:from-orange-600 hover:to-orange-700" 
-                          : "hover:bg-orange-50 hover:text-orange-700 text-gray-700",
-                        "px-4"
+                          : "hover:bg-orange-50 hover:text-orange-700 text-gray-700 bg-white",
+                        "px-4 border border-gray-100"
                       )}
                       onClick={() => {
                         setActiveSection(item.id);
