@@ -49,7 +49,7 @@ export const AppSidebar = ({
           "fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}>
-          <Sidebar className="bg-white border-r shadow-2xl w-80 h-full">
+          <Sidebar className="bg-white border-r shadow-2xl w-72 h-full">
             <SidebarHeader className="p-4 border-b bg-gradient-to-r from-orange-50 to-orange-100">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
