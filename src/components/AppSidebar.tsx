@@ -1,45 +1,62 @@
 
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sidebar, SidebarContent, SidebarHeader } from "@/components/ui/sidebar";
-import { User, Package, ShoppingCart, Store, X } from "lucide-react";
+import { User, Truck, Package, History, Store, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AppSidebarProps {
-  activeSection: "profile" | "products" | "orders";
-  setActiveSection: (section: "profile" | "products" | "orders") => void;
+  activeSection: "supplier-details" | "vehicle-details" | "delivery" | "order-history";
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   isMobile: boolean;
 }
 
 export const AppSidebar = ({ 
-  activeSection, 
-  setActiveSection, 
+  activeSection,
   isOpen,
   setIsOpen,
   isMobile
 }: AppSidebarProps) => {
+  const navigate = useNavigate();
+
   const menuItems = [
     {
-      id: "profile" as const,
-      label: "Profile",
+      id: "supplier-details" as const,
+      label: "Supplier Details",
       icon: User,
-      description: "Manage your information"
+      description: "Manage your information",
+      path: "/supplier-details"
     },
     {
-      id: "products" as const,
-      label: "Products",
+      id: "vehicle-details" as const,
+      label: "Vehicle Details",
+      icon: Truck,
+      description: "Manage your vehicles",
+      path: "/vehicle-details"
+    },
+    {
+      id: "delivery" as const,
+      label: "Delivery Management",
       icon: Package,
-      description: "Manage your products"
+      description: "Track deliveries",
+      path: "/delivery"
     },
     {
-      id: "orders" as const,
-      label: "My Orders",
-      icon: ShoppingCart,
-      description: "View all orders"
+      id: "order-history" as const,
+      label: "Order History",
+      icon: History,
+      description: "View all orders",
+      path: "/order-history"
     }
   ];
 
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    if (isMobile) {
+      setIsOpen(false);
+    }
+  };
 
   return (
     <>
@@ -91,10 +108,7 @@ export const AppSidebar = ({
                           : "hover:bg-orange-50 hover:text-orange-700 text-gray-700 bg-white",
                         "px-4 border border-gray-100"
                       )}
-                      onClick={() => {
-                        setActiveSection(item.id);
-                        setIsOpen(false);
-                      }}
+                      onClick={() => handleNavigation(item.path)}
                     >
                       <Icon className="h-5 w-5 mr-3 flex-shrink-0" />
                       <div className="flex flex-col items-start text-left">
@@ -152,7 +166,7 @@ export const AppSidebar = ({
                           : "hover:bg-accent hover:text-accent-foreground",
                         "px-2"
                       )}
-                      onClick={() => setActiveSection(item.id)}
+                      onClick={() => handleNavigation(item.path)}
                     >
                       <Icon className="h-4 w-4 mr-2 flex-shrink-0" />
                       <div className="flex flex-col items-start text-left">
