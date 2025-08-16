@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Package } from "lucide-react";
 
 const Login = () => {
+  useEffect(() => {
+    document.title = "Login | Supplier Panel";
+  }, []);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -27,7 +30,7 @@ const Login = () => {
     e.preventDefault();
     // Simple validation for demo purposes
     if (formData.email && formData.password) {
-      navigate('/supplier-details');
+      navigate('/products');
     }
   };
 

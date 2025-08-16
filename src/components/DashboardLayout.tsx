@@ -9,7 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  activeSection: "supplier-details" | "vehicle-details" | "delivery" | "order-history";
+  activeSection: "products" | "orders" | "profile";
 }
 
 export const DashboardLayout = ({ children, activeSection }: DashboardLayoutProps) => {

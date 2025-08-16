@@ -1,53 +1,41 @@
-
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Package, ShoppingCart, User, Package2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sidebar, SidebarContent, SidebarHeader } from "@/components/ui/sidebar";
-import { User, Truck, Package, History, Store, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AppSidebarProps {
-  activeSection: "supplier-details" | "vehicle-details" | "delivery" | "order-history";
+  activeSection: "products" | "orders" | "profile";
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   isMobile: boolean;
 }
 
-export const AppSidebar = ({ 
-  activeSection,
-  isOpen,
-  setIsOpen,
-  isMobile
-}: AppSidebarProps) => {
+export const AppSidebar = ({ activeSection, isOpen, setIsOpen, isMobile }: AppSidebarProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
     {
-      id: "supplier-details" as const,
-      label: "Supplier Details",
-      icon: User,
-      description: "Manage your information",
-      path: "/supplier-details"
-    },
-    {
-      id: "vehicle-details" as const,
-      label: "Vehicle Details",
-      icon: Truck,
-      description: "Manage your vehicles",
-      path: "/vehicle-details"
-    },
-    {
-      id: "delivery" as const,
-      label: "Delivery Management",
+      id: "products",
+      label: "Product Management",
       icon: Package,
-      description: "Track deliveries",
-      path: "/delivery"
+      description: "Manage your products",
+      path: "/products"
     },
     {
-      id: "order-history" as const,
-      label: "Order History",
-      icon: History,
-      description: "View all orders",
-      path: "/order-history"
+      id: "orders", 
+      label: "My Orders",
+      icon: ShoppingCart,
+      description: "View and manage orders",
+      path: "/orders"
+    },
+    {
+      id: "profile",
+      label: "Profile Information", 
+      icon: User,
+      description: "Update your profile",
+      path: "/profile"
     }
   ];
 
@@ -58,129 +46,118 @@ export const AppSidebar = ({
     }
   };
 
-  return (
-    <>
-      {/* Mobile Sidebar */}
-      {isMobile ? (
-        <div className={cn(
-          "fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-in-out",
+  if (isMobile) {
+    return (
+      <div 
+        className={cn(
+          "fixed left-0 top-0 h-full w-80 bg-sidebar border-r border-sidebar-border shadow-lg z-50 transform transition-transform duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full"
-        )}>
-          <Sidebar className="bg-white border-r shadow-2xl w-72 h-full">
-            <SidebarHeader className="p-4 border-b bg-gradient-to-r from-orange-50 to-orange-100">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg">
-                    <Store className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-base font-bold bg-gradient-to-r from-orange-600 to-orange-700 bg-clip-text text-transparent">
-                      CrackerSupply
-                    </h2>
-                    <p className="text-sm text-orange-600/80">Supplier Panel</p>
-                  </div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsOpen(false)}
-                  className="h-8 w-8 p-0 hover:bg-orange-100 rounded-full"
-                >
-                  <X className="h-4 w-4 text-orange-600" />
-                </Button>
-              </div>
-            </SidebarHeader>
-            
-            <SidebarContent className="p-4 bg-white overflow-y-auto">
-              <div className="space-y-3">
-                {menuItems.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeSection === item.id;
-                  
-                  return (
-                    <Button
-                      key={item.id}
-                      variant={isActive ? "default" : "ghost"}
-                      className={cn(
-                        "w-full justify-start h-14 transition-all duration-200 text-sm rounded-xl",
+        )}
+      >
+        <div className="flex flex-col h-full">
+          <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
+            <div className="flex items-center gap-2">
+              <Package2 className="h-6 w-6 text-sidebar-primary" />
+              <span className="text-lg font-bold text-sidebar-foreground">Supplier Panel</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsOpen(false)}
+              className="hover:bg-sidebar-accent text-sidebar-foreground"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-4">
+            <nav className="space-y-2">
+              {menuItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                const Icon = item.icon;
+                
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={cn(
+                      "w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors",
+                      isActive 
+                        ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm" 
+                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    )}
+                  >
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <div className="font-medium truncate">{item.label}</div>
+                      <div className={cn(
+                        "text-xs truncate",
                         isActive 
-                          ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg hover:from-orange-600 hover:to-orange-700" 
-                          : "hover:bg-orange-50 hover:text-orange-700 text-gray-700 bg-white",
-                        "px-4 border border-gray-100"
-                      )}
-                      onClick={() => handleNavigation(item.path)}
-                    >
-                      <Icon className="h-5 w-5 mr-3 flex-shrink-0" />
-                      <div className="flex flex-col items-start text-left">
-                        <span className="font-medium text-sm leading-tight">{item.label}</span>
-                        <span className="text-xs opacity-75 leading-tight">{item.description}</span>
+                          ? "text-sidebar-primary-foreground/80" 
+                          : "text-sidebar-foreground/60"
+                      )}>
+                        {item.description}
                       </div>
-                    </Button>
-                  );
-                })}
-              </div>
-            </SidebarContent>
-          </Sidebar>
+                    </div>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
         </div>
-      ) : (
-        /* Desktop Sidebar */
-        <div className={cn(
-          "transition-all duration-300 ease-in-out",
-          !isOpen && "w-0 overflow-hidden"
-        )}>
-          <Sidebar className="bg-white border-r shadow-lg w-64 h-full">
-            <SidebarHeader className="p-3 border-b relative">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsOpen(false)}
-                className="absolute top-2 right-2 h-6 w-6 p-0 hover:bg-gray-100"
-              >
-                <X className="h-3 w-3" />
-              </Button>
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-lg gradient-bg">
-                  <Store className="h-4 w-4 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-sm font-bold gradient-text">CrackerSupply</h2>
-                  <p className="text-xs text-muted-foreground">Supplier Panel</p>
-                </div>
-              </div>
-            </SidebarHeader>
-            
-            <SidebarContent className="p-2">
-              <div className="space-y-1">
-                {menuItems.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeSection === item.id;
-                  
-                  return (
-                    <Button
-                      key={item.id}
-                      variant={isActive ? "default" : "ghost"}
-                      className={cn(
-                        "w-full justify-start h-10 transition-all duration-200 text-xs",
-                        isActive 
-                          ? "bg-primary text-white shadow-md" 
-                          : "hover:bg-accent hover:text-accent-foreground",
-                        "px-2"
-                      )}
-                      onClick={() => handleNavigation(item.path)}
-                    >
-                      <Icon className="h-4 w-4 mr-2 flex-shrink-0" />
-                      <div className="flex flex-col items-start text-left">
-                        <span className="font-medium text-xs leading-tight">{item.label}</span>
-                        <span className="text-xs opacity-75 leading-tight">{item.description}</span>
-                      </div>
-                    </Button>
-                  );
-                })}
-              </div>
-            </SidebarContent>
-          </Sidebar>
-        </div>
+      </div>
+    );
+  }
+
+  // Desktop sidebar
+  return (
+    <div 
+      className={cn(
+        "bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out flex-shrink-0",
+        isOpen ? "w-64" : "w-0 overflow-hidden"
       )}
-    </>
+    >
+      <div className="flex flex-col h-full">
+        <div className="flex items-center gap-2 p-4 border-b border-sidebar-border">
+          <Package2 className="h-6 w-6 text-sidebar-primary" />
+          <span className="text-lg font-bold text-sidebar-foreground">Supplier Panel</span>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto p-4">
+          <nav className="space-y-2">
+            {menuItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              const Icon = item.icon;
+              
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavigation(item.path)}
+                  className={cn(
+                    "w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors",
+                    isActive 
+                      ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm" 
+                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  )}
+                >
+                  <Icon className="h-5 w-5 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <div className="font-medium truncate">{item.label}</div>
+                    <div className={cn(
+                      "text-xs truncate",
+                      isActive 
+                        ? "text-sidebar-primary-foreground/80" 
+                        : "text-sidebar-foreground/60"
+                    )}>
+                      {item.description}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+    </div>
   );
 };
