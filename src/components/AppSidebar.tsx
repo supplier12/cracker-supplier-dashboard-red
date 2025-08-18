@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Package, ShoppingCart, User, Package2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,27 +14,28 @@ export const AppSidebar = ({ activeSection, isOpen, setIsOpen, isMobile }: AppSi
   const navigate = useNavigate();
   const location = useLocation();
 
+  // ✅ Reordered menu items as per requirement
   const menuItems = [
     {
+      id: "profile",
+      label: "Profile",
+      icon: User,
+      description: "Manage your information",
+      path: "/profile"
+    },
+    {
       id: "products",
-      label: "Product Management",
+      label: "Products",
       icon: Package,
       description: "Manage your products",
       path: "/products"
     },
     {
-      id: "orders", 
+      id: "orders",
       label: "My Orders",
       icon: ShoppingCart,
       description: "View and manage orders",
       path: "/orders"
-    },
-    {
-      id: "profile",
-      label: "Profile Information", 
-      icon: User,
-      description: "Update your profile",
-      path: "/profile"
     }
   ];
 
