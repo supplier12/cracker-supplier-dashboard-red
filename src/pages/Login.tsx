@@ -40,7 +40,11 @@ const Login = () => {
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center mb-4">
             <div className="p-3 rounded-full bg-primary/10">
-              <Package className="h-8 w-8 text-primary" />
+              <img 
+                src="/lovable-uploads/00d439d3-3f7b-4731-b5c6-f647e9b5a006.png" 
+                alt="Crackers Craze Logo" 
+                className="h-12 w-12 object-contain"
+              />
             </div>
           </div>
           <CardTitle className="text-3xl font-bold gradient-text">
