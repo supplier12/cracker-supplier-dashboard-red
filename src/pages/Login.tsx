@@ -42,7 +42,7 @@ const Login = () => {
             <img 
               src="/lovable-uploads/00d439d3-3f7b-4731-b5c6-f647e9b5a006.png" 
               alt="Crackers Craze Logo" 
-              className="h-16 w-16 object-contain"
+              className="h-24 w-24 object-contain"
             />
           </div>
           <CardTitle className="text-3xl font-bold gradient-text">
