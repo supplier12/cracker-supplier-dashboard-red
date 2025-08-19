@@ -56,11 +56,11 @@ export const AppSidebar = ({ activeSection, isOpen, setIsOpen, isMobile }: AppSi
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3 py-1">
               <img 
                 src="/lovable-uploads/00d439d3-3f7b-4731-b5c6-f647e9b5a006.png" 
                 alt="Crackers Craze Logo" 
-                className="h-10 w-10 object-contain"
+                className="h-10 w-10 object-contain flex-shrink-0"
               />
               <span className="text-lg font-bold text-sidebar-foreground">Supplier Panel</span>
             </div>
@@ -122,11 +122,11 @@ export const AppSidebar = ({ activeSection, isOpen, setIsOpen, isMobile }: AppSi
       )}
     >
       <div className="flex flex-col h-full">
-        <div className="flex items-center gap-2 p-4 border-b border-sidebar-border">
+        <div className="flex items-center gap-3 p-4 border-b border-sidebar-border">
           <img 
             src="/lovable-uploads/00d439d3-3f7b-4731-b5c6-f647e9b5a006.png" 
             alt="Crackers Craze Logo" 
-            className="h-10 w-10 object-contain"
+            className="h-10 w-10 object-contain flex-shrink-0"
           />
           <span className="text-lg font-bold text-sidebar-foreground">Supplier Panel</span>
         </div>
