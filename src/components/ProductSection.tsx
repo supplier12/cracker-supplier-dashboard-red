@@ -19,11 +19,14 @@ interface Product {
 
 export const ProductSection = () => {
   const [products, setProducts] = useState<Product[]>([
-    { id: "1", category: "Flower Pots", name: "Red Flower Pot", price: 150 },
-    { id: "2", category: "Sparklers", name: "7cm Sparkler", price: 80 },
-    { id: "3", category: "Rockets", name: "Rocket Small", price: 200 },
-    { id: "4", category: "Flower Pots", name: "Green Flower Pot", price: 160 },
-    { id: "5", category: "Sparklers", name: "12cm Sparkler", price: 120 }
+    { id: "1", category: "Sound Crackers", name: "Thunder King 1000 Wala", price: 250 },
+    { id: "2", category: "Sparklers", name: "Golden Sparklers Pack", price: 120 },
+    { id: "3", category: "Rockets", name: "Rocket Bombs Deluxe", price: 180 },
+    { id: "4", category: "Fountains", name: "Flower Pot Fountains", price: 160 },
+    { id: "5", category: "Chakras", name: "Chakra Wheels Supreme", price: 200 },
+    { id: "6", category: "Kids Special", name: "Snake Tablets Giant", price: 80 },
+    { id: "7", category: "Fancy Items", name: "Heart Shape Crackers", price: 150 },
+    { id: "8", category: "Gift Boxes", name: "Diwali Special Gift Box", price: 500 }
   ]);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,14 +38,17 @@ export const ProductSection = () => {
     price: ""
   });
 
-  const categories = ["Flower Pots", "Sparklers", "Rockets", "Bombs", "Whistles"];
+  const categories = ["Sound Crackers", "Sparklers", "Rockets", "Fountains", "Chakras", "Kids Special", "Fancy Items", "Gift Boxes"];
   
   const productsByCategory = {
-    "Flower Pots": ["Red Flower Pot", "Green Flower Pot", "Blue Flower Pot", "Multi Color Flower Pot"],
-    "Sparklers": ["7cm Sparkler", "12cm Sparkler", "15cm Sparkler", "Electric Sparkler"],
-    "Rockets": ["Rocket Small", "Rocket Medium", "Rocket Large", "Whistle Rocket"],
-    "Bombs": ["Atom Bomb", "Hydrogen Bomb", "Thunder Bomb", "Color Bomb"],
-    "Whistles": ["Single Whistle", "Double Whistle", "Triple Whistle", "Musical Whistle"]
+    "Sound Crackers": ["Thunder King 1000 Wala", "Atom Bomb Special", "Double Sound Crackers", "Bullet Bomb Classic"],
+    "Sparklers": ["Golden Sparklers Pack", "Color Sparklers Deluxe", "Electric Sparklers"],
+    "Rockets": ["Rocket Bombs Deluxe", "Whistling Rockets", "Color Burst Rockets"],
+    "Fountains": ["Flower Pot Fountains", "Multi-Color Fountain", "Golden Fountain Supreme"],
+    "Chakras": ["Chakra Wheels Supreme", "Fire Chakra Deluxe", "Multi-Spin Chakra"],
+    "Kids Special": ["Snake Tablets Giant", "Pop Pop Crackers", "Butterfly Crackers"],
+    "Fancy Items": ["Heart Shape Crackers", "Star Burst Fancy", "Flower Shape Deluxe"],
+    "Gift Boxes": ["Diwali Special Gift Box", "Family Fun Gift Box"]
   };
 
   const filteredProducts = products.filter(product =>
