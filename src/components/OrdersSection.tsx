@@ -5,7 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Search, ShoppingCart, Calendar } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Eye, Search, ShoppingCart, Calendar, Package, CheckCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface Order {
@@ -98,6 +100,8 @@ export const OrdersSection = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [cartonCount, setCartonCount] = useState<{ [key: string]: number }>({});
+  const [packingStatus, setPackingStatus] = useState<{ [key: string]: boolean }>({});
 
   const filteredOrders = orders.filter(order =>
     order.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -233,7 +237,59 @@ export const OrdersSection = () => {
                                 </div>
                               </div>
                               
-                              <div className="space-y-2">
+                              <div className="space-y-4 border-t pt-6">
+                                <h4 className="font-semibold text-gray-700 flex items-center gap-2">
+                                  <Package className="h-4 w-4 text-primary" />
+                                  Packaging Information
+                                </h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="cartonCount" className="text-sm font-medium">
+                                      Number of Cartons
+                                    </Label>
+                                    <Input
+                                      id="cartonCount"
+                                      type="number"
+                                      min="0"
+                                      placeholder="Enter carton count"
+                                      value={cartonCount[selectedOrder.id] || ""}
+                                      onChange={(e) => setCartonCount(prev => ({
+                                        ...prev,
+                                        [selectedOrder.id]: parseInt(e.target.value) || 0
+                                      }))}
+                                      className="w-full"
+                                    />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="packingStatus" className="text-sm font-medium">
+                                      Packing Status
+                                    </Label>
+                                    <div className="flex items-center gap-3 p-3 border rounded-md bg-gray-50">
+                                      <Switch
+                                        id="packingStatus"
+                                        checked={packingStatus[selectedOrder.id] || false}
+                                        onCheckedChange={(checked) => setPackingStatus(prev => ({
+                                          ...prev,
+                                          [selectedOrder.id]: checked
+                                        }))}
+                                      />
+                                      <div className="flex items-center gap-2">
+                                        <CheckCircle className={`h-4 w-4 ${packingStatus[selectedOrder.id] ? 'text-green-600' : 'text-gray-400'}`} />
+                                        <span className="text-sm">
+                                          {packingStatus[selectedOrder.id] ? 'Packed' : 'Not Packed'}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex justify-end">
+                                  <Button className="bg-primary hover:bg-primary/90">
+                                    Save Packaging Info
+                                  </Button>
+                                </div>
+                              </div>
+                              
+                              <div className="space-y-2 border-t pt-6">
                                 <h4 className="font-semibold text-gray-700">Order Items</h4>
                                 <div className="rounded-lg border">
                                   <Table>
