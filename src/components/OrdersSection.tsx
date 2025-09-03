@@ -172,6 +172,8 @@ export const OrdersSection = () => {
                   <TableHead className="font-semibold">Buyer Name</TableHead>
                   <TableHead className="font-semibold">Buyer City</TableHead>
                   <TableHead className="font-semibold">Order Status</TableHead>
+                  <TableHead className="font-semibold">Cartons</TableHead>
+                  <TableHead className="font-semibold">Packed</TableHead>
                   <TableHead className="font-semibold">View Details</TableHead>
                 </TableRow>
               </TableHeader>
@@ -190,6 +192,31 @@ export const OrdersSection = () => {
                       <Badge className={getStatusColor(order.status)}>
                         {getStatusText(order.status)}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Input
+                        type="number"
+                        min="0"
+                        placeholder="0"
+                        value={cartonCount[order.id] || ""}
+                        onChange={(e) => setCartonCount(prev => ({
+                          ...prev,
+                          [order.id]: parseInt(e.target.value) || 0
+                        }))}
+                        className="w-20 h-8 text-sm"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={packingStatus[order.id] || false}
+                          onCheckedChange={(checked) => setPackingStatus(prev => ({
+                            ...prev,
+                            [order.id]: checked
+                          }))}
+                        />
+                        <CheckCircle className={`h-4 w-4 ${packingStatus[order.id] ? 'text-green-600' : 'text-gray-400'}`} />
+                      </div>
                     </TableCell>
                     <TableCell>
                       <Dialog>
