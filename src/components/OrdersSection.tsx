@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -103,6 +103,28 @@ export const OrdersSection = () => {
   const [cartonCount, setCartonCount] = useState<{ [key: string]: number }>({});
   const [packingStatus, setPackingStatus] = useState<{ [key: string]: boolean }>({});
 
+  // Auto-save functionality
+  const savePackagingInfo = (orderId: string, cartons?: number, packed?: boolean) => {
+    // Here you would typically make an API call to save the data
+    console.log(`Saving packaging info for order ${orderId}:`, {
+      cartons: cartons !== undefined ? cartons : cartonCount[orderId],
+      packed: packed !== undefined ? packed : packingStatus[orderId]
+    });
+    // For now, we'll just log it, but in a real app this would be an API call
+  };
+
+  const handleCartonCountChange = (orderId: string, value: number) => {
+    setCartonCount(prev => ({ ...prev, [orderId]: value }));
+    // Auto-save after a short delay
+    setTimeout(() => savePackagingInfo(orderId, value), 500);
+  };
+
+  const handlePackingStatusChange = (orderId: string, value: boolean) => {
+    setPackingStatus(prev => ({ ...prev, [orderId]: value }));
+    // Auto-save immediately
+    savePackagingInfo(orderId, undefined, value);
+  };
+
   const filteredOrders = orders.filter(order =>
     order.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
     order.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -199,10 +221,7 @@ export const OrdersSection = () => {
                         min="0"
                         placeholder="0"
                         value={cartonCount[order.id] || ""}
-                        onChange={(e) => setCartonCount(prev => ({
-                          ...prev,
-                          [order.id]: parseInt(e.target.value) || 0
-                        }))}
+                        onChange={(e) => handleCartonCountChange(order.id, parseInt(e.target.value) || 0)}
                         className="w-20 h-8 text-sm"
                       />
                     </TableCell>
@@ -210,10 +229,7 @@ export const OrdersSection = () => {
                       <div className="flex items-center gap-2">
                         <Switch
                           checked={packingStatus[order.id] || false}
-                          onCheckedChange={(checked) => setPackingStatus(prev => ({
-                            ...prev,
-                            [order.id]: checked
-                          }))}
+                          onCheckedChange={(checked) => handlePackingStatusChange(order.id, checked)}
                         />
                         <CheckCircle className={`h-4 w-4 ${packingStatus[order.id] ? 'text-green-600' : 'text-gray-400'}`} />
                       </div>
@@ -264,59 +280,7 @@ export const OrdersSection = () => {
                                 </div>
                               </div>
                               
-                              <div className="space-y-4 border-t pt-6">
-                                <h4 className="font-semibold text-gray-700 flex items-center gap-2">
-                                  <Package className="h-4 w-4 text-primary" />
-                                  Packaging Information
-                                </h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                  <div className="space-y-2">
-                                    <Label htmlFor="cartonCount" className="text-sm font-medium">
-                                      Number of Cartons
-                                    </Label>
-                                    <Input
-                                      id="cartonCount"
-                                      type="number"
-                                      min="0"
-                                      placeholder="Enter carton count"
-                                      value={cartonCount[selectedOrder.id] || ""}
-                                      onChange={(e) => setCartonCount(prev => ({
-                                        ...prev,
-                                        [selectedOrder.id]: parseInt(e.target.value) || 0
-                                      }))}
-                                      className="w-full"
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label htmlFor="packingStatus" className="text-sm font-medium">
-                                      Packing Status
-                                    </Label>
-                                    <div className="flex items-center gap-3 p-3 border rounded-md bg-gray-50">
-                                      <Switch
-                                        id="packingStatus"
-                                        checked={packingStatus[selectedOrder.id] || false}
-                                        onCheckedChange={(checked) => setPackingStatus(prev => ({
-                                          ...prev,
-                                          [selectedOrder.id]: checked
-                                        }))}
-                                      />
-                                      <div className="flex items-center gap-2">
-                                        <CheckCircle className={`h-4 w-4 ${packingStatus[selectedOrder.id] ? 'text-green-600' : 'text-gray-400'}`} />
-                                        <span className="text-sm">
-                                          {packingStatus[selectedOrder.id] ? 'Packed' : 'Not Packed'}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="flex justify-end">
-                                  <Button className="bg-primary hover:bg-primary/90">
-                                    Save Packaging Info
-                                  </Button>
-                                </div>
-                              </div>
-                              
-                              <div className="space-y-2 border-t pt-6">
+                              <div className="space-y-2">
                                 <h4 className="font-semibold text-gray-700">Order Items</h4>
                                 <div className="rounded-lg border">
                                   <Table>
