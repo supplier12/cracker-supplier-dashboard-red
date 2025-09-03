@@ -7,8 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Edit2, Search, Package, RotateCcw } from "lucide-react";
+import { Edit2, Search, Package, RotateCcw, Save, CheckCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Product {
   id: string;
@@ -31,6 +32,8 @@ export const ProductSection = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [savingPrices, setSavingPrices] = useState<{ [key: string]: boolean }>({});
+  const { toast } = useToast();
 
   const [updateForm, setUpdateForm] = useState({
     category: "",
@@ -56,27 +59,58 @@ export const ProductSection = () => {
     product.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleUpdatePrice = () => {
+  const saveProductPrice = async (productId: string, newPrice: number) => {
+    setSavingPrices(prev => ({ ...prev, [productId]: true }));
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      console.log(`Saving product price: ${productId} = ₹${newPrice}`);
+      
+      toast({
+        title: "Price Updated",
+        description: "Product price has been saved successfully.",
+      });
+      
+    } catch (error) {
+      console.error('Error saving product price:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save product price. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingPrices(prev => ({ ...prev, [productId]: false }));
+    }
+  };
+
+  const handleUpdatePrice = async () => {
     if (updateForm.category && updateForm.name && updateForm.price) {
       const existingProduct = products.find(p => 
         p.category === updateForm.category && p.name === updateForm.name
       );
       
       if (existingProduct) {
+        const newPrice = parseFloat(updateForm.price);
         setProducts(products.map(product => 
           product.id === existingProduct.id 
-            ? { ...product, price: parseFloat(updateForm.price) } 
+            ? { ...product, price: newPrice } 
             : product
         ));
+        
+        await saveProductPrice(existingProduct.id, newPrice);
         setUpdateForm({ category: "", name: "", price: "" });
       }
     }
   };
 
-  const handleEditProduct = (id: string, newPrice: number) => {
+  const handleEditProduct = async (id: string, newPrice: number) => {
     setProducts(products.map(product => 
       product.id === id ? { ...product, price: newPrice } : product
     ));
+    
+    await saveProductPrice(id, newPrice);
     setEditingProduct(null);
   };
 
@@ -140,7 +174,12 @@ export const ProductSection = () => {
                       </Badge>
                     </TableCell>
                     <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell className="font-semibold text-green-600">₹{product.price}</TableCell>
+                    <TableCell className="font-semibold text-green-600 flex items-center gap-2">
+                      ₹{product.price}
+                      {savingPrices[product.id] && (
+                        <Save className="h-3 w-3 text-blue-500 animate-spin" />
+                      )}
+                    </TableCell>
                     <TableCell>
                       <Button
                         variant="ghost"
@@ -212,9 +251,13 @@ export const ProductSection = () => {
 
             <div className="space-y-2">
               <Label>&nbsp;</Label>
-              <Button onClick={handleUpdatePrice} className="w-full gradient-bg border-0 hover:opacity-90">
+              <Button 
+                onClick={handleUpdatePrice} 
+                className="w-full gradient-bg border-0 hover:opacity-90"
+                disabled={!updateForm.category || !updateForm.name || !updateForm.price}
+              >
                 <RotateCcw className="h-4 w-4 mr-2" />
-                Update
+                Update Price
               </Button>
             </div>
           </div>
@@ -252,8 +295,22 @@ export const ProductSection = () => {
                 <Button variant="outline" onClick={() => setEditingProduct(null)}>
                   Cancel
                 </Button>
-                <Button onClick={() => handleEditProduct(editingProduct.id, editingProduct.price)} className="gradient-bg border-0">
-                  Update Price
+                <Button 
+                  onClick={() => handleEditProduct(editingProduct.id, editingProduct.price)} 
+                  className="gradient-bg border-0"
+                  disabled={savingPrices[editingProduct.id]}
+                >
+                  {savingPrices[editingProduct.id] ? (
+                    <>
+                      <Save className="h-4 w-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Update Price
+                    </>
+                  )}
                 </Button>
               </div>
             </div>

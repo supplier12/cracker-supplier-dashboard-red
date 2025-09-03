@@ -103,25 +103,40 @@ export const OrdersSection = () => {
   const [cartonCount, setCartonCount] = useState<{ [key: string]: number }>({});
   const [packingStatus, setPackingStatus] = useState<{ [key: string]: boolean }>({});
 
-  // Auto-save functionality
-  const savePackagingInfo = (orderId: string, cartons?: number, packed?: boolean) => {
-    // Here you would typically make an API call to save the data
-    console.log(`Saving packaging info for order ${orderId}:`, {
-      cartons: cartons !== undefined ? cartons : cartonCount[orderId],
-      packed: packed !== undefined ? packed : packingStatus[orderId]
-    });
-    // For now, we'll just log it, but in a real app this would be an API call
+  // Auto-save functionality with improved feedback
+  const savePackagingInfo = async (orderId: string, cartons?: number, packed?: boolean) => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      console.log(`Saving packaging info for order ${orderId}:`, {
+        cartons: cartons !== undefined ? cartons : cartonCount[orderId],
+        packed: packed !== undefined ? packed : packingStatus[orderId]
+      });
+      
+      // Show success feedback only for significant changes
+      if (cartons !== undefined && cartons > 0) {
+        console.log(`✅ Carton count saved: ${cartons}`);
+      }
+      if (packed !== undefined) {
+        console.log(`✅ Packing status saved: ${packed ? 'Packed' : 'Not Packed'}`);
+      }
+      
+    } catch (error) {
+      console.error('Error saving packaging info:', error);
+      // In a real app, you might want to show an error toast here
+    }
   };
 
   const handleCartonCountChange = (orderId: string, value: number) => {
     setCartonCount(prev => ({ ...prev, [orderId]: value }));
-    // Auto-save after a short delay
-    setTimeout(() => savePackagingInfo(orderId, value), 500);
+    // Auto-save after a short delay to avoid excessive API calls
+    setTimeout(() => savePackagingInfo(orderId, value), 800);
   };
 
   const handlePackingStatusChange = (orderId: string, value: boolean) => {
     setPackingStatus(prev => ({ ...prev, [orderId]: value }));
-    // Auto-save immediately
+    // Auto-save immediately for boolean changes
     savePackagingInfo(orderId, undefined, value);
   };
 
